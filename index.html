@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biscuit Crate Tracking AI Agent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">BC</div>
+          <div>
+            <strong>BiscuitOps</strong>
+            <span>Crate AI</span>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" type="button" data-view="overview">
+            <span class="icon" aria-hidden="true">⌁</span>
+            Overview
+          </button>
+          <button class="nav-item" type="button" data-view="scanner">
+            <span class="icon" aria-hidden="true">⌖</span>
+            QR Scan
+          </button>
+          <button class="nav-item" type="button" data-view="routes">
+            <span class="icon" aria-hidden="true">↗</span>
+            Dispatch
+          </button>
+          <button class="nav-item" type="button" data-view="agent">
+            <span class="icon" aria-hidden="true">✦</span>
+            AI Agent
+          </button>
+        </nav>
+
+        <div class="sidebar-card">
+          <span class="eyebrow">Shift Goal</span>
+          <strong>98% crate reconciliation</strong>
+          <div class="mini-progress" aria-hidden="true"><span></span></div>
+          <small>1,246 of 1,310 crates verified</small>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Today · Chennai distribution hub</p>
+            <h1>Biscuit crate control tower</h1>
+          </div>
+          <div class="top-actions">
+            <button class="icon-button" type="button" aria-label="Notifications">⌾</button>
+            <button class="primary-button" type="button" id="scanNow">Start scan</button>
+          </div>
+        </header>
+
+        <section class="alert-strip" aria-live="polite">
+          <div>
+            <strong>AI flagged 3 crates</strong>
+            <span>Two delayed on Route TN-04 and one temperature-risk crate near loading bay B.</span>
+          </div>
+          <button class="ghost-button" type="button" id="resolveAlert">Review</button>
+        </section>
+
+        <section class="metrics-grid" aria-label="Crate metrics">
+          <article class="metric-card">
+            <span class="metric-label">Crates in circulation</span>
+            <strong>8,420</strong>
+            <span class="trend up">+12% vs yesterday</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Verified today</span>
+            <strong>1,246</strong>
+            <span class="trend up">94.7% matched</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Exceptions</span>
+            <strong>17</strong>
+            <span class="trend warn">Needs action</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Avg dwell time</span>
+            <strong>42m</strong>
+            <span class="trend down">8m faster</span>
+          </article>
+        </section>
+
+        <section class="main-grid">
+          <div class="panel scanner-panel" data-panel="scanner">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">QR verification</p>
+                <h2>Crate scanner</h2>
+              </div>
+              <span class="status-pill live">Live</span>
+            </div>
+
+            <div class="scanner-frame" aria-label="Scanner preview">
+              <div class="scan-corners" aria-hidden="true"></div>
+              <div class="qr-code" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="scan-line" aria-hidden="true"></div>
+            </div>
+
+            <div class="scan-result">
+              <div>
+                <span class="metric-label">Last scan</span>
+                <strong id="lastScan">BCT-CHN-0482</strong>
+              </div>
+              <button class="secondary-button" type="button" id="simulateScan">Simulate scan</button>
+            </div>
+          </div>
+
+          <div class="panel route-panel" data-panel="routes">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Dispatch map</p>
+                <h2>Route pulse</h2>
+              </div>
+              <button class="icon-button compact" type="button" aria-label="Refresh routes">↻</button>
+            </div>
+
+            <div class="route-map" aria-hidden="true">
+              <span class="hub"></span>
+              <span class="route route-a"></span>
+              <span class="route route-b"></span>
+              <span class="route route-c"></span>
+              <span class="node node-a"></span>
+              <span class="node node-b"></span>
+              <span class="node node-c"></span>
+              <span class="van van-a">V1</span>
+              <span class="van van-b">V2</span>
+            </div>
+
+            <div class="route-list">
+              <div><strong>TN-04 Bakery Loop</strong><span>414 crates · 2 delays</span></div>
+              <div><strong>OMR Retail Run</strong><span>286 crates · on time</span></div>
+              <div><strong>Porur Return Flow</strong><span>138 crates · 1 mismatch</span></div>
+            </div>
+          </div>
+
+          <div class="panel table-panel" data-panel="overview">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Inventory intelligence</p>
+                <h2>Crate ledger</h2>
+              </div>
+              <div class="segmented" role="tablist" aria-label="Crate filters">
+                <button class="active" type="button" data-filter="all">All</button>
+                <button type="button" data-filter="risk">Risk</button>
+                <button type="button" data-filter="clean">Clean</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Crate ID</th>
+                    <th>Batch</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Agent note</th>
+                  </tr>
+                </thead>
+                <tbody id="crateRows"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel agent-panel" data-panel="agent">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">AI operations agent</p>
+                <h2>Decision assist</h2>
+              </div>
+              <span class="status-pill">Online</span>
+            </div>
+
+            <div class="agent-feed" id="agentFeed" aria-live="polite"></div>
+
+            <form class="agent-command" id="agentForm">
+              <input
+                id="agentInput"
+                type="text"
+                value="Find crates delayed over 30 minutes"
+                aria-label="AI command"
+              />
+              <button class="primary-button" type="submit">Ask</button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
