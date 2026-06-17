@@ -1,0 +1,14 @@
+{
+  "batches": [
+    {
+      "qrValue": "BIS-DISTRIBUTORA-20-PKG-001",
+      "distributor": "Distributor A",
+      "total": 20,
+      "used": 3,
+      "remaining": 17,
+      "createdAt": "2026-06-09T05:17:12.904Z",
+      "updatedAt": "2026-06-09T05:17:13.338Z"
+    }
+  ],
+  "nextSerial": 2
+}

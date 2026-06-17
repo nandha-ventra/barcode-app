@@ -3,201 +3,268 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Biscuit Crate Tracking AI Agent</title>
+    <title>Biscuit Package QR Flow</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Primary navigation">
+    <main class="app">
+      <aside class="sidebar">
         <div class="brand">
-          <div class="brand-mark" aria-hidden="true">BC</div>
+          <span class="brand-mark">BC</span>
           <div>
-            <strong>BiscuitOps</strong>
-            <span>Crate AI</span>
+            <strong>Package QR Flow</strong>
+            <small>Small working demo</small>
           </div>
         </div>
 
-        <nav class="nav-list">
-          <button class="nav-item active" type="button" data-view="overview">
-            <span class="icon" aria-hidden="true">⌁</span>
-            Overview
+        <nav class="nav" aria-label="Flow pages">
+          <button class="nav-item active" type="button" data-page="generatePage">
+            <span>1</span>
+            Generate QR
           </button>
-          <button class="nav-item" type="button" data-view="scanner">
-            <span class="icon" aria-hidden="true">⌖</span>
-            QR Scan
+          <button class="nav-item" type="button" data-page="scanPage">
+            <span>2</span>
+            Scan QR
           </button>
-          <button class="nav-item" type="button" data-view="routes">
-            <span class="icon" aria-hidden="true">↗</span>
-            Dispatch
-          </button>
-          <button class="nav-item" type="button" data-view="agent">
-            <span class="icon" aria-hidden="true">✦</span>
-            AI Agent
+          <button class="nav-item" type="button" data-page="distributorPage">
+            <span>3</span>
+            Update Value
           </button>
         </nav>
 
-        <div class="sidebar-card">
-          <span class="eyebrow">Shift Goal</span>
-          <strong>98% crate reconciliation</strong>
-          <div class="mini-progress" aria-hidden="true"><span></span></div>
-          <small>1,246 of 1,310 crates verified</small>
+        <div class="side-note">
+          <p>Current QR</p>
+          <strong id="sideQr">No QR generated</strong>
+          <small id="sideInfo">Create one from page 1.</small>
         </div>
       </aside>
 
-      <main class="workspace">
+      <section class="workspace">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Today · Chennai distribution hub</p>
-            <h1>Biscuit crate control tower</h1>
+            <p class="eyebrow">Biscuit package dispatch demo</p>
+            <h1>Generate QR, scan it, then let distributor reduce count</h1>
           </div>
-          <div class="top-actions">
-            <button class="icon-button" type="button" aria-label="Notifications">⌾</button>
-            <button class="primary-button" type="button" id="scanNow">Start scan</button>
-          </div>
+          <button class="secondary" type="button" id="resetDemo">Reset demo</button>
         </header>
 
-        <section class="alert-strip" aria-live="polite">
-          <div>
-            <strong>AI flagged 3 crates</strong>
-            <span>Two delayed on Route TN-04 and one temperature-risk crate near loading bay B.</span>
-          </div>
-          <button class="ghost-button" type="button" id="resolveAlert">Review</button>
-        </section>
-
-        <section class="metrics-grid" aria-label="Crate metrics">
-          <article class="metric-card">
-            <span class="metric-label">Crates in circulation</span>
-            <strong>8,420</strong>
-            <span class="trend up">+12% vs yesterday</span>
-          </article>
-          <article class="metric-card">
-            <span class="metric-label">Verified today</span>
-            <strong>1,246</strong>
-            <span class="trend up">94.7% matched</span>
-          </article>
-          <article class="metric-card">
-            <span class="metric-label">Exceptions</span>
-            <strong>17</strong>
-            <span class="trend warn">Needs action</span>
-          </article>
-          <article class="metric-card">
-            <span class="metric-label">Avg dwell time</span>
-            <strong>42m</strong>
-            <span class="trend down">8m faster</span>
-          </article>
-        </section>
-
-        <section class="main-grid">
-          <div class="panel scanner-panel" data-panel="scanner">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">QR verification</p>
-                <h2>Crate scanner</h2>
-              </div>
-              <span class="status-pill live">Live</span>
+        <section class="page active" id="generatePage">
+          <article class="panel hero-panel">
+            <div>
+              <p class="eyebrow">Page 1</p>
+              <h2>Create distributor package QR</h2>
+              <p class="copy">
+                User chooses a distributor and package count. The app generates a QR value that carries
+                the distributor mapping and starting package count.
+              </p>
             </div>
 
-            <div class="scanner-frame" aria-label="Scanner preview">
-              <div class="scan-corners" aria-hidden="true"></div>
-              <div class="qr-code" aria-hidden="true">
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span>
-              </div>
-              <div class="scan-line" aria-hidden="true"></div>
-            </div>
+            <form class="form" id="generateForm">
+              <label>
+                Distributor
+                <select id="generateDistributor">
+                  <option value="Distributor A">Distributor A · Chennai North</option>
+                  <option value="Distributor B">Distributor B · OMR Retail</option>
+                  <option value="Distributor C">Distributor C · Porur Loop</option>
+                </select>
+              </label>
 
-            <div class="scan-result">
-              <div>
-                <span class="metric-label">Last scan</span>
-                <strong id="lastScan">BCT-CHN-0482</strong>
-              </div>
-              <button class="secondary-button" type="button" id="simulateScan">Simulate scan</button>
-            </div>
-          </div>
+              <label>
+                Package count
+                <input id="generateCount" type="number" min="1" value="25" />
+              </label>
 
-          <div class="panel route-panel" data-panel="routes">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">Dispatch map</p>
-                <h2>Route pulse</h2>
-              </div>
-              <button class="icon-button compact" type="button" aria-label="Refresh routes">↻</button>
-            </div>
+              <label>
+                Mobile app URL for QR
+                <input id="appUrlInput" autocomplete="off" />
+              </label>
 
-            <div class="route-map" aria-hidden="true">
-              <span class="hub"></span>
-              <span class="route route-a"></span>
-              <span class="route route-b"></span>
-              <span class="route route-c"></span>
-              <span class="node node-a"></span>
-              <span class="node node-b"></span>
-              <span class="node node-c"></span>
-              <span class="van van-a">V1</span>
-              <span class="van van-b">V2</span>
-            </div>
-
-            <div class="route-list">
-              <div><strong>TN-04 Bakery Loop</strong><span>414 crates · 2 delays</span></div>
-              <div><strong>OMR Retail Run</strong><span>286 crates · on time</span></div>
-              <div><strong>Porur Return Flow</strong><span>138 crates · 1 mismatch</span></div>
-            </div>
-          </div>
-
-          <div class="panel table-panel" data-panel="overview">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">Inventory intelligence</p>
-                <h2>Crate ledger</h2>
-              </div>
-              <div class="segmented" role="tablist" aria-label="Crate filters">
-                <button class="active" type="button" data-filter="all">All</button>
-                <button type="button" data-filter="risk">Risk</button>
-                <button type="button" data-filter="clean">Clean</button>
-              </div>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Crate ID</th>
-                    <th>Batch</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Agent note</th>
-                  </tr>
-                </thead>
-                <tbody id="crateRows"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="panel agent-panel" data-panel="agent">
-            <div class="panel-heading">
-              <div>
-                <p class="eyebrow">AI operations agent</p>
-                <h2>Decision assist</h2>
-              </div>
-              <span class="status-pill">Online</span>
-            </div>
-
-            <div class="agent-feed" id="agentFeed" aria-live="polite"></div>
-
-            <form class="agent-command" id="agentForm">
-              <input
-                id="agentInput"
-                type="text"
-                value="Find crates delayed over 30 minutes"
-                aria-label="AI command"
-              />
-              <button class="primary-button" type="submit">Ask</button>
+              <button class="primary" type="submit">Generate QR code</button>
             </form>
+
+            <div class="message" id="generateMessage">Choose distributor and package count to generate QR.</div>
+          </article>
+
+          <article class="panel qr-card-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Generated label</p>
+                <h2>QR preview</h2>
+              </div>
+              <span class="pill" id="qrStatus">Waiting</span>
+            </div>
+
+            <div class="label-preview">
+              <div class="phone-qr">
+                <img id="qrImage" alt="Generated QR code" />
+              </div>
+              <div>
+                <span>QR value</span>
+                <strong id="generatedQr">Not generated</strong>
+                <small id="generatedInfo">Distributor and package count will show here.</small>
+              </div>
+            </div>
+
+            <div class="qr-actions">
+              <a class="secondary link-button" id="openQrLink" href="#" target="_blank" rel="noreferrer">Open QR link</a>
+              <button class="secondary" type="button" id="copyQrLink">Copy QR link</button>
+            </div>
+            <button class="secondary full" type="button" id="useQrOnScan">Use this QR on Scan page</button>
+          </article>
+        </section>
+
+        <section class="page" id="scanPage">
+          <article class="panel hero-panel">
+            <div>
+              <p class="eyebrow">Page 2</p>
+              <h2>Scan or enter QR input</h2>
+              <p class="copy">
+                Staff enters the QR value. The system finds the distributor and shows total, used, and
+                remaining package count.
+              </p>
+            </div>
+
+            <form class="form scan-form" id="scanForm">
+              <label>
+                User role
+                <select id="scanRole">
+                  <option value="STAFF">Staff / Viewer</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </label>
+
+              <label>
+                QR input
+                <input id="scanQrInput" autocomplete="off" placeholder="Paste or scan QR value" />
+              </label>
+              <button class="primary" type="submit">Read QR</button>
+            </form>
+
+            <div class="camera-box">
+              <video id="scanVideo" playsinline muted></video>
+              <div class="camera-actions">
+                <button class="secondary" type="button" id="startCameraScan">Start mobile camera scan</button>
+                <button class="secondary" type="button" id="stopCameraScan">Stop camera</button>
+              </div>
+            </div>
+
+            <div class="message" id="scanMessage">Enter generated QR to see remaining count.</div>
+          </article>
+
+          <article class="panel result-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Scan result</p>
+                <h2>Distributor found</h2>
+              </div>
+              <span class="pill live">Live</span>
+            </div>
+
+            <div class="result-card" id="scanResult">
+              <span>Waiting for QR</span>
+              <strong>No distributor selected</strong>
+              <small>Remaining count appears after scan.</small>
+            </div>
+
+            <div class="count-grid">
+              <div><span>Total</span><strong id="scanTotal">0</strong></div>
+              <div><span>Used</span><strong id="scanUsed">0</strong></div>
+              <div><span>Remaining</span><strong id="scanRemaining">0</strong></div>
+            </div>
+
+            <div class="admin-actions" id="scanAdminActions" hidden>
+              <label>
+                Decrease quantity by
+                <input id="scanDecreaseBy" type="number" min="1" value="1" />
+              </label>
+              <button class="primary" type="button" id="scanDecreaseButton">Decrease quantity</button>
+            </div>
+            <div class="message" id="scanAdminMessage">Admin controls appear only when role is Admin.</div>
+          </article>
+        </section>
+
+        <section class="page" id="distributorPage">
+          <article class="panel hero-panel">
+            <div>
+              <p class="eyebrow">Page 3</p>
+              <h2>Distributor decreases package count</h2>
+              <p class="copy">
+                This page is a direct update view for the same QR. It is useful when a scanned QR opens
+                straight into the update workflow.
+              </p>
+            </div>
+
+            <form class="form scan-form" id="distributorLoadForm">
+              <label>
+                Distributor QR
+                <input id="distributorQrInput" autocomplete="off" placeholder="Enter QR value" />
+              </label>
+              <button class="primary" type="submit">Load QR</button>
+            </form>
+
+            <div class="camera-box">
+              <video id="updateVideo" playsinline muted></video>
+              <div class="camera-actions">
+                <button class="secondary" type="button" id="startCameraUpdate">Start mobile camera scan</button>
+                <button class="secondary" type="button" id="stopCameraUpdate">Stop camera</button>
+              </div>
+            </div>
+
+            <div class="message" id="distributorMessage">Load a QR before decreasing count.</div>
+          </article>
+
+          <article class="panel distributor-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Distributor counter</p>
+                <h2 id="distributorTitle">No QR loaded</h2>
+              </div>
+              <span class="pill" id="distributorPill">Pending</span>
+            </div>
+
+            <div class="count-grid large">
+              <div><span>Total packages</span><strong id="distTotal">0</strong></div>
+              <div><span>Decreased</span><strong id="distUsed">0</strong></div>
+              <div><span>Remaining</span><strong id="distRemaining">0</strong></div>
+            </div>
+
+            <div class="decrease-box">
+              <label>
+                Decrease by
+                <input id="decreaseBy" type="number" min="1" value="1" />
+              </label>
+              <button class="primary" type="button" id="decreaseButton">Decrease count</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">All generated QR batches</p>
+              <h2>Live mappings</h2>
+            </div>
+            <button class="secondary" type="button" id="loadSample">Load sample</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>QR value</th>
+                  <th>Distributor</th>
+                  <th>Total</th>
+                  <th>Decreased</th>
+                  <th>Remaining</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="mappingRows"></tbody>
+            </table>
           </div>
         </section>
-      </main>
-    </div>
+      </section>
+    </main>
 
     <script src="./app.js"></script>
   </body>
